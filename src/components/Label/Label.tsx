@@ -5,23 +5,23 @@ import { Colors } from '../../constants/colors';
 import { GLOBAL_PREFIX } from '../../constants/prefix';
 import { generateClasses } from '../../utils';
 
-type ColorType = 'primary' | 'blue' | 'green' | 'yellow' | 'red';
+type ColorType = 'primary' | 'white' | 'blue' | 'green' | 'yellow' | 'red';
 type Size = 'small' | 'medium';
 
 export interface LabelProps extends React.ButtonHTMLAttributes<HTMLSpanElement> {
   colorType?: ColorType;
-  size?: Size;
   light?: boolean;
+  size?: Size;
 }
 
 const Label = (props: LabelProps) => {
-  const { colorType = 'primary', size = 'small', light = true, className, ...labelProps } = props;
+  const { colorType = 'primary', light = true, size = 'small', className, ...labelProps } = props;
   const LABEL_PREFIX = `${GLOBAL_PREFIX}-label`;
   const generateLabelCls = generateClasses(LABEL_PREFIX);
 
   return (
     <span
-      className={generateLabelCls([colorType, size, light], className)}
+      className={generateLabelCls([colorType, light, size], className)}
       css={css(LabelDefaultStyles, getLabelColorStyles(colorType, light), LabelSizeStyles[size])}
       {...labelProps}></span>
   );
@@ -45,9 +45,8 @@ const LabelDefaultStyles = css({
 });
 
 const LabelColorTypeStyles: { [key in ColorType]: { light: ReturnType<typeof css>; bold: ReturnType<typeof css> } } = {
-  // LightTheme - light: primary_GR1, bold: primary_BK
-  // DarkTheme - light: primary_GR2, bold: primary_WH  로 생각하고 만들었습니다.
-  // 현재 primary 는 LightTheme 기준입니다.
+  // primary - light: primary_GR1, bold: primary_BK
+  // white - light: primary_GR2, bold: primary_WH  로 생각하고 만들었습니다.
   primary: {
     light: css({
       backgroundColor: Colors.primary[300],
@@ -56,6 +55,16 @@ const LabelColorTypeStyles: { [key in ColorType]: { light: ReturnType<typeof css
     bold: css({
       backgroundColor: Colors.primary[800],
       color: Colors.primary[100],
+    }),
+  },
+  white: {
+    light: css({
+      backgroundColor: Colors.primary[600],
+      color: Colors.primary[100],
+    }),
+    bold: css({
+      backgroundColor: Colors.primary[200],
+      color: Colors.primary[800],
     }),
   },
   blue: {
