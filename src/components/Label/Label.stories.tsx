@@ -1,12 +1,11 @@
 import { Meta, StoryObj } from '@storybook/react';
 import Label from './Label';
-import { fn } from '@storybook/test';
 
 const meta = {
   title: 'Label',
   component: Label,
   tags: ['autodocs'],
-  args: { onClick: fn(), children: 'Label' },
+  args: { children: 'Label' },
 } satisfies Meta<typeof Label>;
 
 export default meta;
