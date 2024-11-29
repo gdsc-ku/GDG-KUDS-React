@@ -16,8 +16,8 @@ export interface LabelProps extends React.ButtonHTMLAttributes<HTMLSpanElement> 
 
 const Label = (props: LabelProps) => {
   const { colorType = 'primary', size = 'small', light = true, className, ...labelProps } = props;
-  const BUTTON_PREFIX = `${GLOBAL_PREFIX}-label`;
-  const generateLabelCls = generateClasses(BUTTON_PREFIX);
+  const LABEL_PREFIX = `${GLOBAL_PREFIX}-label`;
+  const generateLabelCls = generateClasses(LABEL_PREFIX);
 
   return (
     <span
