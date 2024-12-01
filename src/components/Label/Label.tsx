@@ -23,7 +23,8 @@ const Label = (props: LabelProps) => {
     <span
       className={generateLabelCls([colorType, light, size], className)}
       css={css(LabelDefaultStyles, getLabelColorStyles(colorType, light), LabelSizeStyles[size])}
-      {...labelProps}></span>
+      {...labelProps}
+    />
   );
 };
 
