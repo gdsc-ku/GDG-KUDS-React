@@ -26,6 +26,7 @@ export const checkbox: Story = {
     name: 'checkbox',
     colorType: 'yellow',
     disabled: true,
+    children: 'asdf',
   },
 };
 

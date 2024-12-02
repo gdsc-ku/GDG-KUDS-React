@@ -28,19 +28,17 @@ const Checkbox = React.forwardRef<HTMLLabelElement, CheckboxProps>(
       <label
         ref={ref}
         htmlFor={name}
-        className={generateCheckboxCls(['wrapper'])}
+        className={generateCheckboxCls([
+          'wrapper',
+          {
+            disabled: checkboxProps.disabled,
+            checked: checkboxProps.checked,
+          },
+          className,
+        ])}
         css={CheckboxWrapperStyle}
         style={labelStyle}>
-        <span
-          className={generateCheckboxCls([
-            colorType,
-            {
-              disabled: checkboxProps.disabled,
-              checked: checkboxProps.checked,
-            },
-            className,
-          ])}
-          css={CheckboxStyle}>
+        <span className={generateCheckboxCls([colorType, 'checkbox'])}>
           <input type='checkbox' id={name} className={generateCheckboxCls(['input'])} {...checkboxProps} />
           <span className={generateCheckboxCls(['inner'])}>
             <IconCheck className={generateCheckboxCls(['icon', 'icon-check'])} />
@@ -54,60 +52,12 @@ const Checkbox = React.forwardRef<HTMLLabelElement, CheckboxProps>(
 
 export default Checkbox;
 
-const CheckboxWrapperStyle = css({
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 8,
-});
-
-const CheckedStyle = css({
-  backgroundColor: Colors.primary[700],
-
-  [`&.${CHECKBOX_PREFIX}-blue`]: {
-    backgroundColor: Colors.blue[500],
-  },
-
-  [`&.${CHECKBOX_PREFIX}-green`]: {
-    backgroundColor: Colors.green[500],
-  },
-  [`&.${CHECKBOX_PREFIX}-yellow`]: {
-    backgroundColor: Colors.yellow[500],
-  },
-  [`&.${CHECKBOX_PREFIX}-red`]: {
-    backgroundColor: Colors.red[500],
-  },
-
-  [`& > span.${CHECKBOX_PREFIX}-inner`]: {
-    opacity: 1,
-  },
-});
-
-const DisabledStyle = css({
-  backgroundColor: Colors.primary[200],
-  cursor: 'not-allowed',
-
-  [`&.${CHECKBOX_PREFIX}-blue`]: {
-    borderColor: Colors.blue[100],
-  },
-
-  [`&.${CHECKBOX_PREFIX}-green`]: {
-    borderColor: Colors.green[100],
-  },
-  [`&.${CHECKBOX_PREFIX}-yellow`]: {
-    borderColor: Colors.yellow[100],
-  },
-  [`&.${CHECKBOX_PREFIX}-red`]: {
-    borderColor: Colors.red[100],
-  },
-});
-
-const CheckboxStyle = css({
+const CheckboxDefaultStyle = css({
   position: 'relative',
 
   display: 'inline-flex',
   justifyContent: 'center',
   alignItems: 'center',
-  cursor: 'pointer',
 
   width: 12,
   height: 12,
@@ -117,7 +67,7 @@ const CheckboxStyle = css({
   borderColor: Colors.primary[700],
   borderRadius: 4,
 
-  transitionProperty: 'background-color, border-color, opacity',
+  transitionProperty: 'all',
   transitionDuration: '100ms',
   transitionTimingFunction: 'ease-out',
 
@@ -128,9 +78,11 @@ const CheckboxStyle = css({
   [`&.${CHECKBOX_PREFIX}-green`]: {
     borderColor: Colors.green[300],
   },
+
   [`&.${CHECKBOX_PREFIX}-yellow`]: {
     borderColor: Colors.yellow[300],
   },
+
   [`&.${CHECKBOX_PREFIX}-red`]: {
     borderColor: Colors.red[300],
   },
@@ -155,7 +107,73 @@ const CheckboxStyle = css({
 
     opacity: 0,
   },
+});
 
-  [`&.${CHECKBOX_PREFIX}-checked`]: CheckedStyle,
-  [`&.${CHECKBOX_PREFIX}-disabled`]: DisabledStyle,
+const CheckedCheckboxStyle = css({
+  backgroundColor: Colors.primary[700],
+
+  [`&.${CHECKBOX_PREFIX}-blue`]: {
+    backgroundColor: Colors.blue[500],
+  },
+
+  [`&.${CHECKBOX_PREFIX}-green`]: {
+    backgroundColor: Colors.green[500],
+  },
+  [`&.${CHECKBOX_PREFIX}-yellow`]: {
+    backgroundColor: Colors.yellow[500],
+  },
+  [`&.${CHECKBOX_PREFIX}-red`]: {
+    backgroundColor: Colors.red[500],
+  },
+
+  [`> span.${CHECKBOX_PREFIX}-inner`]: {
+    opacity: 1,
+  },
+});
+
+const DisabledCheckboxStyle = css({
+  backgroundColor: Colors.primary[200],
+
+  [`&.${CHECKBOX_PREFIX}-blue`]: {
+    borderColor: Colors.blue[100],
+  },
+
+  [`&.${CHECKBOX_PREFIX}-green`]: {
+    borderColor: Colors.green[100],
+  },
+  [`&.${CHECKBOX_PREFIX}-yellow`]: {
+    borderColor: Colors.yellow[100],
+  },
+  [`&.${CHECKBOX_PREFIX}-red`]: {
+    borderColor: Colors.red[100],
+  },
+});
+
+const HelpTextStyle = css({
+  fontSize: 14,
+  fontWeight: 500,
+  lineHeight: '8px',
+  color: Colors.primary[800],
+});
+
+const CheckboxWrapperStyle = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 8,
+
+  cursor: 'pointer',
+
+  [`> span.${CHECKBOX_PREFIX}-checkbox`]: CheckboxDefaultStyle,
+  [`> span.${CHECKBOX_PREFIX}-help`]: HelpTextStyle,
+
+  [`&.${CHECKBOX_PREFIX}-checked > span.${CHECKBOX_PREFIX}-checkbox`]: CheckedCheckboxStyle,
+  [`&.${CHECKBOX_PREFIX}-disabled`]: {
+    cursor: 'not-allowed',
+
+    [`> span.${CHECKBOX_PREFIX}-checkbox`]: DisabledCheckboxStyle,
+  },
+
+  [`&.${CHECKBOX_PREFIX}-disabled > span.${CHECKBOX_PREFIX}-help`]: {
+    color: Colors.primary[400],
+  },
 });
