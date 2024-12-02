@@ -4,6 +4,8 @@ import { css } from '@emotion/react';
 import { GLOBAL_PREFIX } from '../../constants/prefix';
 import { generateClasses } from '../../utils';
 import { Colors } from '../../constants/colors';
+import IconCheck from '../../icons/check';
+import React from 'react';
 
 type BaseCheckboxAttribute = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -20,29 +22,35 @@ export interface CheckboxProps extends BaseCheckboxAttribute {
 const CHECKBOX_PREFIX = `${GLOBAL_PREFIX}-checkbox`;
 const generateCheckboxCls = generateClasses(CHECKBOX_PREFIX);
 
-/**
- * TODO: 체크 아이콘 추가
- */
-const Checkbox = ({ colorType, name, labelStyle, className, children, ...checkboxProps }: CheckboxProps) => {
-  return (
-    <label htmlFor={name} className={generateCheckboxCls(['wrapper'])} css={CheckboxWrapperStyle} style={labelStyle}>
-      <span
-        className={generateCheckboxCls([
-          colorType,
-          {
-            disabled: checkboxProps.disabled,
-            checked: checkboxProps.checked,
-          },
-          className,
-        ])}
-        css={CheckboxStyle}>
-        <input type='checkbox' id={name} className={generateCheckboxCls(['input'])} {...checkboxProps} />
-        <span className={generateCheckboxCls(['inner'])} />
-      </span>
-      {children && <span className={generateCheckboxCls(['help'])}>{children}</span>}
-    </label>
-  );
-};
+const Checkbox = React.forwardRef<HTMLLabelElement, CheckboxProps>(
+  ({ colorType, name, labelStyle, className, children, ...checkboxProps }, ref) => {
+    return (
+      <label
+        ref={ref}
+        htmlFor={name}
+        className={generateCheckboxCls(['wrapper'])}
+        css={CheckboxWrapperStyle}
+        style={labelStyle}>
+        <span
+          className={generateCheckboxCls([
+            colorType,
+            {
+              disabled: checkboxProps.disabled,
+              checked: checkboxProps.checked,
+            },
+            className,
+          ])}
+          css={CheckboxStyle}>
+          <input type='checkbox' id={name} className={generateCheckboxCls(['input'])} {...checkboxProps} />
+          <span className={generateCheckboxCls(['inner'])}>
+            <IconCheck className={generateCheckboxCls(['icon', 'icon-check'])} />
+          </span>
+        </span>
+        {children && <span className={generateCheckboxCls(['help'])}>{children}</span>}
+      </label>
+    );
+  },
+);
 
 export default Checkbox;
 
@@ -50,18 +58,6 @@ const CheckboxWrapperStyle = css({
   display: 'inline-flex',
   alignItems: 'center',
   gap: 8,
-});
-
-const InputStyle = css({
-  [`&.${CHECKBOX_PREFIX}-input`]: {
-    position: 'absolute',
-    inset: 0,
-
-    margin: 0,
-    padding: 0,
-
-    opacity: 0,
-  },
 });
 
 const CheckedStyle = css({
@@ -79,6 +75,10 @@ const CheckedStyle = css({
   },
   [`&.${CHECKBOX_PREFIX}-red`]: {
     backgroundColor: Colors.red[500],
+  },
+
+  [`& > span.${CHECKBOX_PREFIX}-inner`]: {
+    opacity: 1,
   },
 });
 
@@ -101,21 +101,9 @@ const DisabledStyle = css({
   },
 });
 
-const InnerCheckboxStyle = css({
-  display: 'inline-flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-
-  width: '100%',
-  height: '100%',
-
-  ['&::after']: {
-    content: '""',
-    // how to insert check icon?
-  },
-});
-
 const CheckboxStyle = css({
+  position: 'relative',
+
   display: 'inline-flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -129,7 +117,7 @@ const CheckboxStyle = css({
   borderColor: Colors.primary[700],
   borderRadius: 4,
 
-  transitionProperty: 'background-color, border-color',
+  transitionProperty: 'background-color, border-color, opacity',
   transitionDuration: '100ms',
   transitionTimingFunction: 'ease-out',
 
@@ -147,9 +135,27 @@ const CheckboxStyle = css({
     borderColor: Colors.red[300],
   },
 
+  [`& > input.${CHECKBOX_PREFIX}-input`]: {
+    position: 'absolute',
+    inset: 0,
+
+    margin: 0,
+    padding: 0,
+
+    opacity: 0,
+  },
+
+  [`& > span.${CHECKBOX_PREFIX}-inner`]: {
+    display: 'inline-flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    width: '100%',
+    height: '100%',
+
+    opacity: 0,
+  },
+
   [`&.${CHECKBOX_PREFIX}-checked`]: CheckedStyle,
   [`&.${CHECKBOX_PREFIX}-disabled`]: DisabledStyle,
-
-  [`& > input.${CHECKBOX_PREFIX}-input`]: InputStyle,
-  [`& > span.${CHECKBOX_PREFIX}-inner`]: InnerCheckboxStyle,
 });

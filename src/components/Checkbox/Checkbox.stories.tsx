@@ -9,7 +9,6 @@ const meta = {
   args: {},
   argTypes: {
     name: { control: false },
-    checked: { control: false },
   },
 
   render: function Render(args) {
