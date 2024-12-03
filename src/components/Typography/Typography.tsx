@@ -1,40 +1,54 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { GLOBAL_PREFIX } from '../../constants/prefix';
-import { classNames } from '../../utils';
+import { generateClasses } from '../../utils';
 
-type Level = 1 | 2;
-type Size = 'medium' | 'small';
+type Weight = 'regular' | 'medium' | 'semiBold' | 'bold';
+type Size = 'md' | 'sm';
 
 export interface TypographyProps extends React.HTMLAttributes<HTMLParagraphElement> {
-  level: Level;
-  size: Size;
+  weight?: Weight;
+  size?: Size;
 }
 
-const Typography = ({ level, size, className, ...typographyProps }: TypographyProps) => {
-  className = classNames([`${GLOBAL_PREFIX}-typography`, className]);
+const TYPOGRAPHY_PREFIX = `${GLOBAL_PREFIX}-typography`;
+const generateTypoCls = generateClasses(TYPOGRAPHY_PREFIX);
 
-  return <p {...typographyProps} className={className} css={css([Weight[level], Style[size]])} />;
+const Typography = ({ weight = 'regular', size = 'sm', className, ...typographyProps }: TypographyProps) => {
+  const typographyCls = generateTypoCls([weight, size], className);
+
+  return <p {...typographyProps} className={typographyCls} css={TypographyStyle} />;
 };
 
 export default Typography;
 
-const Weight: { [key in Level]: ReturnType<typeof css> } = {
-  1: css({
-    fontWeight: 500,
-  }),
-  2: css({
+const Weight = {
+  [`&.${TYPOGRAPHY_PREFIX}-regular`]: {
     fontWeight: 400,
-  }),
+  },
+
+  [`&.${TYPOGRAPHY_PREFIX}-medium`]: {
+    fontWeight: 500,
+  },
+
+  [`&.${TYPOGRAPHY_PREFIX}-semiBold`]: {
+    fontWeight: 600,
+  },
+
+  [`&.${TYPOGRAPHY_PREFIX}-bold`]: {
+    fontWeight: 700,
+  },
 };
 
-const Style: { [key in Size]: ReturnType<typeof css> } = {
-  medium: css({
-    fontSize: 16,
-    lineHeight: '24px',
-  }),
-  small: css({
+const TypographyStyle = css({
+  ...Weight,
+  [`&.${TYPOGRAPHY_PREFIX}-sm`]: {
     fontSize: 14,
     lineHeight: '22px',
-  }),
-};
+  },
+
+  [`&.${TYPOGRAPHY_PREFIX}-md`]: {
+    fontSize: 16,
+    lineHeight: '24px',
+  },
+});

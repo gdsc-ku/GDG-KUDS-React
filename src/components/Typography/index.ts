@@ -1,4 +1,4 @@
 import DefaultTypography from './Typography';
-import Header from './Header';
+import Heading from './Heading';
 
-export const Typography = Object.assign(DefaultTypography, { Header });
+export const Typography = Object.assign(DefaultTypography, { Title: Heading });
