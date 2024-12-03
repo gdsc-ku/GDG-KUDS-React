@@ -84,12 +84,6 @@ const InputDefaultStyles = css({
 
   cursor: 'text',
 
-  '&:focus': {
-    outline: 'none',
-    color: Colors.primary[800],
-    borderColor: Colors.primary[800],
-  }, //input focus
-
   [`&.${INPUT_PREFIX}-small`]: {
     width: 200,
     height: 14,
@@ -140,6 +134,12 @@ const InputContainerStyles = css({
     color: Colors.primary[700],
     [`> div.${INPUT_PREFIX}-wrapper > input.${INPUT_PREFIX}-inner`]: {
       borderColor: Colors.primary[500],
+      //focus를 이렇게 넣는 것이 맞는지 모르겠음
+      '&:focus': {
+        transition: 'border-color 0.2s, color 0.2s',
+        outline: 'none',
+        borderColor: Colors.primary[800],
+      },
     },
   },
 
@@ -147,6 +147,11 @@ const InputContainerStyles = css({
     color: Colors.green[500],
     [`> div.${INPUT_PREFIX}-wrapper > input.${INPUT_PREFIX}-inner`]: {
       borderColor: Colors.green[500],
+      '&:focus': {
+        transition: 'border-color 0.2s, color 0.2s',
+        outline: 'none',
+        borderColor: Colors.primary[800],
+      },
     },
   },
 
@@ -154,6 +159,11 @@ const InputContainerStyles = css({
     color: Colors.red[500],
     [`> div.${INPUT_PREFIX}-wrapper > input.${INPUT_PREFIX}-inner`]: {
       borderColor: Colors.red[500],
+      '&:focus': {
+        transition: 'border-color 0.2s, color 0.2s',
+        outline: 'none',
+        borderColor: Colors.primary[800],
+      },
     },
   },
 });
