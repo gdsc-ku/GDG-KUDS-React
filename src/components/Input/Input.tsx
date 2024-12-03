@@ -21,6 +21,8 @@ export interface InputProps extends Omit<InputAttribute, 'size'> {
   status?: Status;
   icon?: React.ReactNode;
 }
+const INPUT_PREFIX = `${GLOBAL_PREFIX}-input`;
+const generateInputCls = generateClasses(INPUT_PREFIX);
 
 const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const {
@@ -34,57 +36,36 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     icon,
     ...inputProps
   } = props;
-  const INPUT_PREFIX = `${GLOBAL_PREFIX}-input`;
-  const generateInputCls = generateClasses(INPUT_PREFIX);
 
   return (
-    <div css={ContainerStyles} className={generateInputCls([colorType, type, size], className)}>
-      {label && (
-        <label css={InputLabelStyles} className={generateInputCls([label])}>
-          {label}
-        </label>
-      )}
-      <div css={InputWrapperStyles}>
+    <div css={InputContainerStyles} className={generateInputCls(['container', status, className])}>
+      {label && <label className={generateInputCls(['label'])}>{label}</label>}
+      <div className={generateInputCls(['wrapper'])}>
         <input
           ref={ref}
           type={type}
-          css={[InputDefaultStyles, InputSizeStyles[size], InputStatusStyles[status]]}
+          className={generateInputCls([colorType, 'inner', { disabled: inputProps.disabled }, size])}
           {...inputProps}
         />
-        {icon && <span css={[InputIconStyles]}>{icon}</span>}
+        {icon && <span className={generateInputCls(['icon'])}>{icon}</span>}
         {/* success icon, error icon 추가 */}
       </div>
 
-      {helpText && (
-        <p css={[InputHelpTextSyles, InputStatusHelpTextStyles[status]]} className={generateInputCls([helpText])}>
-          {helpText}
-        </p>
-      )}
+      {helpText && <p className={generateInputCls(['helptext'])}>{helpText}</p>}
     </div>
   );
 });
 
 export default Input;
 
-const ContainerStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 2,
-  width: '100%',
-});
-
-const InputWrapperStyles = css({
-  position: 'relative',
-}); // icon 적용 이후 수정 예정
-
-const InputLabelStyles = css({
+const LabelStyles = css({
   fontSize: 12,
   fontWeight: 500,
   color: Colors.primary[800],
   marginBottom: 2, //피그마 기반 수정
 });
 
-const InputHelpTextSyles = css({
+const HelpTextSyles = css({
   fontSize: 10,
   fontWeight: 300,
   marginTop: 5, //피그마 기반 수정
@@ -99,7 +80,6 @@ const InputDefaultStyles = css({
 
   border: '1.2px solid',
   borderRadius: 8,
-  borderColor: Colors.primary[500],
   backgroundColor: Colors.primary[100],
 
   cursor: 'text',
@@ -110,59 +90,70 @@ const InputDefaultStyles = css({
     borderColor: Colors.primary[800],
   }, //input focus
 
-  '&:disabled': {
+  [`&.${INPUT_PREFIX}-small`]: {
+    width: 200,
+    height: 14,
+  },
+  [`&.${INPUT_PREFIX}-medium`]: {
+    width: 260,
+    height: 24,
+  },
+
+  [`&.${INPUT_PREFIX}-disabled`]: {
     backgroundColor: Colors.primary[200],
     borderColor: Colors.primary[300],
 
     cursor: 'not-allowed',
-  }, //input disabled
+  },
 });
 
-const InputSizeStyles: { [key in Size]: ReturnType<typeof css> } = {
-  small: css({
-    width: 200,
-    height: 14,
-  }),
-  medium: css({
-    width: 260,
-    height: 24,
-  }),
-};
+const WrapperStyles = css({
+  position: 'relative',
 
-// Serve Type으로 제시된 부분을 Status로 관리
-const InputStatusStyles: { [key in Status]: ReturnType<typeof css> } = {
-  default: css({
-    borderColor: Colors.primary[500],
-  }),
-  success: css({
-    borderColor: Colors.green[500],
-  }),
-  error: css({
-    color: Colors.red[500],
-  }),
-};
+  [`> input.${INPUT_PREFIX}-inner`]: InputDefaultStyles,
 
-const InputStatusHelpTextStyles: { [key in Status]: ReturnType<typeof css> } = {
-  default: css({
-    color: Colors.primary[700],
-  }),
-  success: css({
-    color: Colors.green[500],
-  }),
-  error: css({
-    color: Colors.red[500],
-  }),
-};
+  //icon scss로 수정 아이콘에 className을 만들어서 바로 적용
+  //추후 icon 전체 업데이트
+  [`> span.${INPUT_PREFIX}-icon`]: {
+    position: 'absolute',
+    right: 10,
+    top: '50%',
+    transform: 'translateY(-50%)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    pointerEvents: 'none',
+  },
+}); // icon 적용 이후 수정 예정
 
-//icon scss로 수정 아이콘에 className을 만들어서 바로 적용
-//추후 icon 전체 업데이트
-const InputIconStyles = css({
-  position: 'absolute',
-  right: 10,
-  top: '50%',
-  transform: 'translateY(-50%)',
+const InputContainerStyles = css({
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  pointerEvents: 'none',
+  flexDirection: 'column',
+  gap: 2,
+  width: '100%',
+
+  [`> label.${INPUT_PREFIX}-label`]: LabelStyles,
+  [`> div.${INPUT_PREFIX}-wrapper`]: WrapperStyles,
+  [`> p.${INPUT_PREFIX}-helptext`]: HelpTextSyles,
+
+  [`&.${INPUT_PREFIX}-default`]: {
+    color: Colors.primary[700],
+    [`> div.${INPUT_PREFIX}-wrapper > input.${INPUT_PREFIX}-inner`]: {
+      borderColor: Colors.primary[500],
+    },
+  },
+
+  [`&.${INPUT_PREFIX}-success`]: {
+    color: Colors.green[500],
+    [`> div.${INPUT_PREFIX}-wrapper > input.${INPUT_PREFIX}-inner`]: {
+      borderColor: Colors.green[500],
+    },
+  },
+
+  [`&.${INPUT_PREFIX}-error`]: {
+    color: Colors.red[500],
+    [`> div.${INPUT_PREFIX}-wrapper > input.${INPUT_PREFIX}-inner`]: {
+      borderColor: Colors.red[500],
+    },
+  },
 });
