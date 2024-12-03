@@ -18,6 +18,8 @@ export const Text: Story = {
     type: 'text',
     size: 'small',
     status: 'default',
+    label: '',
+    helpText: '',
     disabled: false,
   },
 };
