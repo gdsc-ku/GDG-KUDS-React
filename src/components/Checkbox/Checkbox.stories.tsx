@@ -25,14 +25,7 @@ export const checkbox: Story = {
   args: {
     name: 'checkbox',
     colorType: 'yellow',
-    disabled: true,
-    children: 'asdf',
-  },
-};
-
-export const checkboxWithText: Story = {
-  args: {
-    name: 'checkboxWithChildren',
-    children: 'text',
+    disabled: false,
+    children: '',
   },
 };

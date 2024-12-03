@@ -114,16 +114,20 @@ const CheckedCheckboxStyle = css({
 
   [`&.${CHECKBOX_PREFIX}-blue`]: {
     backgroundColor: Colors.blue[500],
+    borderColor: Colors.blue[500],
   },
 
   [`&.${CHECKBOX_PREFIX}-green`]: {
     backgroundColor: Colors.green[500],
+    borderColor: Colors.green[500],
   },
   [`&.${CHECKBOX_PREFIX}-yellow`]: {
     backgroundColor: Colors.yellow[500],
+    borderColor: Colors.yellow[500],
   },
   [`&.${CHECKBOX_PREFIX}-red`]: {
     backgroundColor: Colors.red[500],
+    borderColor: Colors.red[500],
   },
 
   [`> span.${CHECKBOX_PREFIX}-inner`]: {
