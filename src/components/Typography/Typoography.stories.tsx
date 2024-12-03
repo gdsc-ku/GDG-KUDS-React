@@ -1,14 +1,38 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { Typography } from '.';
 
-const meta = {
+const typoMeta: Meta<typeof Typography> = {
   title: 'Typography',
-  component: Typography,
-  tags: ['autodocs'],
-  args: { level: 1, size: 'medium', children: 'Hello, this is a body.' },
-} satisfies Meta<typeof Typography>;
+};
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default typoMeta;
 
-export const Body1: Story = {};
+type Story = StoryObj<typeof typoMeta>;
+
+export const Heading: StoryObj<Meta<typeof Typography.Title>> = {
+  render: (args) => {
+    return <Typography.Title {...args}>This is a Typography</Typography.Title>;
+  },
+  args: { level: 1 },
+  argTypes: { level: { control: 'select', options: [1, 2, 3, 4, 5] } },
+};
+
+export const Body: Story = {
+  render: (args) => {
+    return <Typography {...args}>This is a Typography</Typography>;
+  },
+  args: {
+    size: 'sm',
+    weight: 'bold',
+  },
+  argTypes: {
+    size: {
+      control: 'select',
+      options: ['sm', 'md'],
+    },
+    weight: {
+      control: 'select',
+      options: ['regular', 'medium', 'semiBold', 'bold'],
+    },
+  },
+};
