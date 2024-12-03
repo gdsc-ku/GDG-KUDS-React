@@ -15,33 +15,26 @@ export interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextArea
   placeholder?: string;
 }
 
+const TEXTAREA_PREFIX = `${GLOBAL_PREFIX}-textarea`;
+const generateTextAreaCls = generateClasses(TEXTAREA_PREFIX);
+
 const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>((props, ref) => {
   const { size = 'large', label, className, ...textAreaProps } = props;
-  const INPUT_PREFIX = `${GLOBAL_PREFIX}-textarea`;
-  const generateTextAreaCls = generateClasses(INPUT_PREFIX);
 
   return (
-    <div css={ContainerStyles} className={generateTextAreaCls([size], className)}>
-      {label && (
-        <label css={TextAreaLabelStyles} className={generateTextAreaCls([label])}>
-          {label}
-        </label>
-      )}
-      <textarea ref={ref} css={[TextAreaDefaultStyles, TextAreaSizeStyles[size]]} {...textAreaProps}></textarea>
+    <div css={TextAreaContainerStyles} className={generateTextAreaCls(['container', className])}>
+      {label && <label className={generateTextAreaCls(['label'])}>{label}</label>}
+      <textarea
+        ref={ref}
+        className={generateTextAreaCls([size, 'inner', { disabled: textAreaProps.disabled }])}
+        {...textAreaProps}></textarea>
     </div>
   );
 });
 
 export default TextArea;
 
-const ContainerStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 16,
-  width: '100%',
-});
-
-const TextAreaLabelStyles = css({
+const LabelStyles = css({
   fontSize: 12,
   fontWeight: 700,
   color: Colors.primary[800],
@@ -67,7 +60,12 @@ const TextAreaDefaultStyles = css({
     borderColor: Colors.primary[800],
   }, //textarea focus
 
-  '&:disabled': {
+  [`&.${TEXTAREA_PREFIX}-large`]: {
+    width: 660,
+    height: 280,
+  },
+
+  [`&.${TEXTAREA_PREFIX}-disabled`]: {
     backgroundColor: Colors.primary[200],
     borderColor: Colors.primary[300],
 
@@ -75,9 +73,12 @@ const TextAreaDefaultStyles = css({
   }, //textarea disabled
 });
 
-const TextAreaSizeStyles: { [key in Size]: ReturnType<typeof css> } = {
-  large: css({
-    width: 660,
-    height: 280,
-  }),
-};
+const TextAreaContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 16,
+  width: '100%',
+
+  [`> label.${TEXTAREA_PREFIX}-label`]: LabelStyles,
+  [`> textarea.${TEXTAREA_PREFIX}-inner`]: TextAreaDefaultStyles,
+});
