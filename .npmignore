@@ -1,9 +1,0 @@
-node_modules/
-src/
-*.config.js
-*.ts
-*.tsx
-
-vite.config.ts
-tsconfig.json
-yarn.lock
