@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 import Checkbox from './Checkbox';
 import { useState } from 'react';
+import { ConfigProvider } from '../ConfigProvider';
 
 const meta = {
   title: 'Checkbox',
@@ -10,10 +11,14 @@ const meta = {
   argTypes: {
     name: { control: false },
   },
-
   render: function Render(args) {
     const [checked, setChecked] = useState(false);
-    return <Checkbox {...args} checked={checked} onChange={(e) => setChecked(e.target.checked)} />;
+
+    return (
+      <ConfigProvider>
+        <Checkbox {...args} checked={checked} onChange={(e) => setChecked(e.target.checked)} />
+      </ConfigProvider>
+    );
   },
 } satisfies Meta<typeof Checkbox>;
 

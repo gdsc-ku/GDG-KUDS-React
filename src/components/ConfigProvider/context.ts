@@ -1,18 +1,12 @@
 import { createContext } from 'react';
+import { COLORS } from './styles/color';
 
 type ContextValue = {
-  mode?: 'light' | 'dark';
-  getPrefixClassName: () => string;
+  color?: Record<string, Record<string, string>>;
 };
 
-const DEFAULT_PREFIX_CLASSNAME = 'gdg-kuds';
+export const PREFIX_CLS = 'gdg-kuds';
 
 export const ConfigContext = createContext<ContextValue>({
-  getPrefixClassName: (suffix?: string) => {
-    if (suffix) {
-      return `${DEFAULT_PREFIX_CLASSNAME}-${suffix}`;
-    }
-
-    return DEFAULT_PREFIX_CLASSNAME;
-  },
+  color: COLORS['light'],
 });

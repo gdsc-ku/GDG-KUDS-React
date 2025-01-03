@@ -1,39 +1,35 @@
-import { useCallback, useContext, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ConfigContext } from './context';
+import { COLORS } from './styles/color';
 
 interface ConfigContextProps {
-  prefix?: string;
-  mode?: 'light' | 'dark';
   theme?: {
-    [key: string]: unknown;
+    mode?: 'light' | 'dark';
   };
   children: React.ReactNode;
 }
 
-const ConfigProvider = ({ children, prefix, mode }: ConfigContextProps) => {
-  const contextValue = useContext(ConfigContext);
-  const defaultGetPrefixCls = contextValue.getPrefixClassName;
-
-  const getPrefixClassName = useCallback(
-    (suffix?: string) => {
-      if (suffix) {
-        return `${prefix ?? defaultGetPrefixCls()}-${suffix}`;
-      }
-
-      return prefix ?? defaultGetPrefixCls();
-    },
-    [defaultGetPrefixCls, prefix],
-  );
+const ConfigProvider = ({ children, theme = {} }: ConfigContextProps) => {
+  const { mode = 'light' } = theme;
 
   const value = useMemo(() => {
     const config = {
-      ...contextValue,
-      mode: mode ?? 'light',
-      getPrefixClassName,
+      color: COLORS[mode],
     };
 
     return config;
-  }, [mode, getPrefixClassName, contextValue]);
+  }, [mode]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const { color } = value;
+
+    Object.entries(color).forEach(([type, colorEntries]) => {
+      Object.entries(colorEntries).forEach(([key, value]) => {
+        root.style.setProperty(`--${type}-${key}`, value);
+      });
+    });
+  }, [value]);
 
   return <ConfigContext.Provider value={value}>{children}</ConfigContext.Provider>;
 };

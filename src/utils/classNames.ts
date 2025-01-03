@@ -55,3 +55,10 @@ export const generateClasses =
 
     return mergedClasses;
   };
+
+export const clsx = (...values: AvailableClass[]): string => {
+  return values
+    .map((value) => parseCls(value))
+    .filter((cls) => !!cls)
+    .join(' ');
+};
