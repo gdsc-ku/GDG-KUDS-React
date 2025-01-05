@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { GLOBAL_PREFIX } from '../../constants/prefix';
-import { generateClasses } from '../../utils';
+import { clsx } from '../../utils';
+import { PREFIX_CLS } from '../ConfigProvider/context';
 
 type Weight = 'regular' | 'medium' | 'semiBold' | 'bold';
 type Size = 'md' | 'sm';
@@ -11,44 +11,41 @@ export interface TypographyProps extends React.HTMLAttributes<HTMLParagraphEleme
   size?: Size;
 }
 
-const TYPOGRAPHY_PREFIX = `${GLOBAL_PREFIX}-typography`;
-const generateTypoCls = generateClasses(TYPOGRAPHY_PREFIX);
+const prefixCls = `${PREFIX_CLS}-typography`;
 
-const Typography = ({ weight = 'regular', size = 'sm', className, ...typographyProps }: TypographyProps) => {
-  const typographyCls = generateTypoCls([weight, size], className);
+const Typography = ({ weight, size, className, ...typographyProps }: TypographyProps) => {
+  const typographyCls = clsx(
+    {
+      [`${prefixCls}-${weight}`]: !!weight,
+      [`${prefixCls}-${size}`]: !!size,
+    },
+    className,
+  );
 
-  return <p {...typographyProps} className={typographyCls} css={TypographyStyle} />;
+  return <p className={typographyCls} css={TypographyStyle} {...typographyProps} />;
 };
 
 export default Typography;
 
-const Weight = {
-  [`&.${TYPOGRAPHY_PREFIX}-regular`]: {
-    fontWeight: 400,
+const TypographyStyle = css({
+  fontSize: 14,
+  fontWeight: 400,
+  lineHeight: '22px',
+
+  [`&.${prefixCls}-md`]: {
+    fontSize: 16,
+    lineHeight: '24px',
   },
 
-  [`&.${TYPOGRAPHY_PREFIX}-medium`]: {
+  [`&.${prefixCls}-medium`]: {
     fontWeight: 500,
   },
 
-  [`&.${TYPOGRAPHY_PREFIX}-semiBold`]: {
+  [`&.${prefixCls}-semiBold`]: {
     fontWeight: 600,
   },
 
-  [`&.${TYPOGRAPHY_PREFIX}-bold`]: {
+  [`&.${prefixCls}-bold`]: {
     fontWeight: 700,
-  },
-};
-
-const TypographyStyle = css({
-  ...Weight,
-  [`&.${TYPOGRAPHY_PREFIX}-sm`]: {
-    fontSize: 14,
-    lineHeight: '22px',
-  },
-
-  [`&.${TYPOGRAPHY_PREFIX}-md`]: {
-    fontSize: 16,
-    lineHeight: '24px',
   },
 });
