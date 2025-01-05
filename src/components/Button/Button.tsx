@@ -33,24 +33,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     className,
   );
 
-  const icLoadingCls = clsx(`${prefixCls}-icon`, `${prefixCls}-icon-loading`);
-
   return (
-    <button
-      ref={ref}
-      className={buttonCls}
-      css={ButtonStyle}
-      onClick={(e) => {
-        // loading 동안 클릭 이벤트 발생 안하도록
-        if (loading) {
-          e.preventDefault();
-          return;
-        }
-
-        buttonProps.onClick?.(e);
-      }}
-      {...buttonProps}>
-      {loading && <IcLoader className={icLoadingCls} css={LoaderIconStyle} />}
+    <button ref={ref} className={buttonCls} css={ButtonStyle} {...buttonProps}>
+      {loading && (
+        <span className={clsx(`${prefixCls}-icon`, `${prefixCls}-icon-loading`)}>
+          <IcLoader />
+        </span>
+      )}
       {!loading && icon && <span className={`${prefixCls}-icon`}>{icon}</span>}
       {!loading && children && <span className={`${prefixCls}-inner`}>{children}</span>}
     </button>
@@ -59,138 +48,98 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
 
 export default Button;
 
-const DefaultStyle = css({
-  padding: '14px 20px',
+const ButtonStyle = css(
+  {
+    padding: '14px 20px',
 
-  display: 'inline-flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: 8,
+    display: 'inline-flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
 
-  height: 48,
+    height: 48,
 
-  backgroundColor: 'var(--primary-800)',
-  color: 'var(--primary-100)',
+    border: 'none',
+    borderRadius: 300,
 
-  border: 'none',
-  borderRadius: 300,
-
-  transitionProperty: 'background-color, color',
-  transitionDuration: '150ms',
-  transitionTimingFunction: 'ease-in-out',
-
-  cursor: 'pointer',
-
-  '&:hover': {
-    backgroundColor: 'var(--primary-200)',
-    color: 'var(--primary-800)',
-  },
-  '&:active': {
-    backgroundColor: 'var(--primary-300)',
-    color: 'var(--primary-800)',
-  },
-
-  '&:disabled': {
-    backgroundColor: 'var(--primary-400)',
+    backgroundColor: 'var(--primary-800)',
     color: 'var(--primary-100)',
 
-    cursor: 'not-allowed',
+    cursor: 'pointer',
 
-    '&:hover, &:active': {
-      backgroundColor: 'var(--primary-400)',
-      color: 'var(--primary-100)',
-    },
-  },
-});
-
-const ColorTypeStyle = css({
-  [`&.${prefixCls}-blue`]: {
-    backgroundColor: 'var(--blue-500)',
-    color: 'var(--primary-100)',
-    '&:hover': {
-      backgroundColor: 'var(--blue-100)',
-    },
-    '&:active': {
-      backgroundColor: 'var(--blue-300)',
-    },
-  },
-  [`&.${prefixCls}-green`]: {
-    backgroundColor: 'var(--green-500)',
-    color: 'var(--primary-100)',
+    transitionProperty: 'background-color, color',
+    transitionDuration: '150ms',
+    transitionTimingFunction: 'ease-in-out',
 
     '&:hover': {
-      backgroundColor: 'var(--green-100)',
+      backgroundColor: 'var(--primary-200)',
+      color: 'var(--primary-800)',
     },
     '&:active': {
-      backgroundColor: 'var(--green-300)',
+      backgroundColor: 'var(--primary-300)',
+      color: 'var(--primary-800)',
     },
-  },
-  [`&.${prefixCls}-yellow`]: {
-    color: 'var(--primary-100)',
-    backgroundColor: 'var(--yellow-500)',
-    '&:hover': {
-      backgroundColor: 'var(--yellow-100)',
-    },
-    '&:active': {
-      backgroundColor: 'var(--yellow-300)',
-    },
-  },
-  [`&.${prefixCls}-red`]: {
-    backgroundColor: 'var(--red-500)',
-    color: 'var(--primary-100)',
-    '&:hover': {
-      backgroundColor: 'var(--red-100)',
-    },
-    '&:active': {
-      backgroundColor: 'var(--red-300)',
-    },
-  },
-});
+    '&:disabled': {
+      backgroundColor: 'var(--primary-400) !important',
+      color: 'var(--primary-100) !important',
 
-const SizeStyle = css({
-  [`&.${prefixCls}:not(.${prefixCls}-icon-only)`]: {
-    minWidth: 120,
-
-    [`&.${prefixCls}-lg`]: {
-      width: '100%',
+      cursor: 'not-allowed',
     },
-  },
 
-  [`&.${prefixCls}-icon-only`]: {
-    padding: 12,
-    width: 48,
+    [`&.${prefixCls}:not(.${prefixCls}-icon-only)`]: {
+      minWidth: 120,
 
-    span: {
+      [`&.${prefixCls}-lg`]: {
+        width: '100%',
+      },
+    },
+
+    [`&.${prefixCls}-icon-only`]: {
+      padding: 12,
+      width: 48,
+
+      [`&.${prefixCls}-lg`]: {
+        padding: '12px 28px',
+        width: 80,
+      },
+    },
+
+    [`> .${prefixCls}-icon`]: {
       display: 'inline-flex',
       justifyContent: 'center',
       alignItems: 'center',
 
-      width: 24,
-      height: 24,
-    },
+      [`&.${prefixCls}-icon-loading > svg`]: {
+        animation: 'spin 1.5s linear infinite',
 
-    [`&.${prefixCls}-lg`]: {
-      padding: '12px 28px',
-      width: 80,
-    },
-  },
-});
+        '@keyframes spin': {
+          from: {
+            transform: 'rotate(0deg)',
+          },
+          to: {
+            transform: 'rotate(360deg)',
+          },
+        },
 
-const LoaderIconStyle = css({
-  animation: 'spin 1.5s linear infinite',
-
-  '@keyframes spin': {
-    from: {
-      transform: 'rotate(0deg)',
-    },
-    to: {
-      transform: 'rotate(360deg)',
+        ['path']: {
+          stroke: 'var(--primary-100)',
+        },
+      },
     },
   },
+  ['blue', 'green', 'yellow', 'red'].map((colorType) =>
+    css({
+      [`&.${prefixCls}-${colorType}`]: {
+        backgroundColor: `var(--${colorType}-500)`,
+        color: `var(--primary-100)`,
 
-  ['path']: {
-    stroke: 'var(--primary-100)',
-  },
-});
-
-const ButtonStyle = css(DefaultStyle, ColorTypeStyle, SizeStyle);
+        '&:hover': {
+          backgroundColor: `var(--${colorType}-100)`,
+        },
+        '&:active': {
+          backgroundColor: `var(--${colorType}-300)`,
+        },
+      },
+    }),
+  ),
+);

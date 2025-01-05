@@ -2,6 +2,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import Button from './Button';
 import { ConfigProvider } from '../ConfigProvider';
 import { useState } from 'react';
+import { IcCheck } from '../../icons';
 
 const meta: Meta<typeof Button> = {
   title: 'Button',
@@ -58,9 +59,10 @@ export const withoutIcon: Story = {
 
 export const withIcon: Story = {
   args: {
-    icon: 'a',
+    icon: <IcCheck />,
     size: 'md',
     colorType: 'yellow',
     loading: true,
+    children: 'asdfasdfasfasf',
   },
 };
