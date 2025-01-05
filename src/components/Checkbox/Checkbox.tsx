@@ -170,6 +170,10 @@ const CheckboxStyle = css({
     height: '100%',
 
     opacity: 0,
+
+    [`> .${prefixCls}-icon-check path`]: {
+      stroke: 'var(--primary-100)',
+    },
   },
 });
 

@@ -2,8 +2,14 @@ interface Props extends Omit<React.SVGProps<SVGElement>, 'ref'> {}
 
 const IconCheck = (props: Props) => {
   return (
-    <svg width='8' height='6' viewBox='0 0 8 6' fill='none' xmlns='http://www.w3.org/2000/svg' {...props}>
-      <path d='M1 2.6L3.25 5L7 1' stroke='white' strokeWidth='1.6' strokeLinecap='round' strokeLinejoin='round' />
+    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' {...props}>
+      <path
+        d='M16.8 8.3999L9.64043 15.5999L7.19995 13.1456'
+        stroke='black'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
     </svg>
   );
 };
