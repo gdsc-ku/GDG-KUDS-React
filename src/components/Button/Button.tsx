@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { clsx } from '../../utils/classNames';
 import { forwardRef } from 'react';
 import { PREFIX_CLS } from '../ConfigProvider/context';
+import { IcLoader } from '../../icons';
 
 type ColorType = 'primary' | 'blue' | 'green' | 'yellow' | 'red';
 type Size = 'md' | 'lg';
@@ -17,9 +18,6 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const prefixCls = `${PREFIX_CLS}-btn`;
 
-/**
- * TODO: 로딩 아이콘 추가
- */
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   const { colorType, size, loading, icon, className, children, ...buttonProps } = props;
   const { disabled } = buttonProps;
@@ -52,7 +50,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
         buttonProps.onClick?.(e);
       }}
       {...buttonProps}>
-      {loading && <span className={icLoadingCls}>loading</span>}
+      {loading && <IcLoader className={icLoadingCls} css={LoaderIconStyle} />}
       {!loading && icon && <span className={`${prefixCls}-icon`}>{icon}</span>}
       {!loading && children && <span className={`${prefixCls}-inner`}>{children}</span>}
     </button>
@@ -175,6 +173,23 @@ const SizeStyle = css({
       padding: '12px 28px',
       width: 80,
     },
+  },
+});
+
+const LoaderIconStyle = css({
+  animation: 'spin 1.5s linear infinite',
+
+  '@keyframes spin': {
+    from: {
+      transform: 'rotate(0deg)',
+    },
+    to: {
+      transform: 'rotate(360deg)',
+    },
+  },
+
+  ['path']: {
+    stroke: 'var(--primary-100)',
   },
 });
 
