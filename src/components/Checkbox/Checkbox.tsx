@@ -108,10 +108,10 @@ const WrapperStyle = css({
         borderColor: 'var(--red-100)',
       },
     },
+  },
 
-    [`> .${prefixCls}-helper`]: {
-      color: 'var(--primary-400)',
-    },
+  [`> .${prefixCls}-helper`]: {
+    color: 'var(--primary-400)',
   },
 });
 
@@ -158,6 +158,7 @@ const CheckboxStyle = css({
     padding: 0,
 
     opacity: 0,
+    cursor: 'unset',
   },
 
   [`> .${prefixCls}-inner`]: {
