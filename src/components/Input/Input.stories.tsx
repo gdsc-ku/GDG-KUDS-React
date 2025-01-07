@@ -29,6 +29,10 @@ export const Text: Story = {
       control: 'radio',
       options: ['primary'],
     },
+    type: {
+      control: 'radio',
+      options: ['text', 'password'],
+    },
     size: {
       control: 'radio',
       options: ['small', 'medium'],
@@ -63,6 +67,10 @@ export const Password: Story = {
     colorType: {
       control: 'radio',
       options: ['primary'],
+    },
+    type: {
+      control: 'radio',
+      options: ['text', 'password'],
     },
     size: {
       control: 'radio',
