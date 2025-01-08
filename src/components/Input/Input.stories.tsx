@@ -11,7 +11,7 @@ export default inputMeta;
 
 type Story = StoryObj<typeof inputMeta>;
 
-export const Text: Story = {
+export const Basic: Story = {
   render: (args) => {
     return <Input {...args} />;
   },
@@ -22,45 +22,6 @@ export const Text: Story = {
     status: 'default',
     label: '',
     helpText: '',
-    disabled: false,
-  },
-  argTypes: {
-    colorType: {
-      control: 'radio',
-      options: ['primary'],
-    },
-    type: {
-      control: 'radio',
-      options: ['text', 'password'],
-    },
-    size: {
-      control: 'radio',
-      options: ['small', 'medium'],
-    },
-    status: {
-      control: 'radio',
-      options: ['default', 'success', 'error'],
-    },
-    label: {
-      control: 'object',
-    },
-    helpText: {
-      control: 'object',
-    },
-  },
-};
-
-export const Password: Story = {
-  render: (args) => {
-    return <Input {...args} />;
-  },
-  args: {
-    colorType: 'primary',
-    type: 'password',
-    size: 'small',
-    status: 'success',
-    label: 'Password',
-    helpText: 'Enter characters more than 8',
     disabled: false,
   },
   argTypes: {
