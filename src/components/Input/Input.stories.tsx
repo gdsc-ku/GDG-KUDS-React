@@ -1,18 +1,20 @@
 import { Meta, StoryObj } from '@storybook/react';
 import Input from './Input';
 import { fn } from '@storybook/test';
+import TextArea from './TextArea';
 
-const meta = {
+const inputMeta: Meta<typeof Input> = {
   title: 'Input',
-  component: Input,
-  tags: ['autodocs'],
   args: { onChange: fn(), placeholder: 'Input' },
-} satisfies Meta<typeof Input>;
+};
+export default inputMeta;
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof inputMeta>;
 
-export const Text: Story = {
+export const Basic: Story = {
+  render: (args) => {
+    return <Input {...args} />;
+  },
   args: {
     colorType: 'primary',
     type: 'text',
@@ -22,16 +24,49 @@ export const Text: Story = {
     helpText: '',
     disabled: false,
   },
+  argTypes: {
+    colorType: {
+      control: 'radio',
+      options: ['primary'],
+    },
+    type: {
+      control: 'radio',
+      options: ['text', 'password'],
+    },
+    size: {
+      control: 'radio',
+      options: ['small', 'medium'],
+    },
+    status: {
+      control: 'radio',
+      options: ['default', 'success', 'error'],
+    },
+    label: {
+      control: 'object',
+    },
+    helpText: {
+      control: 'object',
+    },
+  },
 };
 
-export const Password: Story = {
+export const Textarea: StoryObj<Meta<typeof TextArea>> = {
+  render: (args) => {
+    return <TextArea {...args} />;
+  },
   args: {
-    colorType: 'primary',
-    type: 'password',
-    size: 'small',
-    status: 'success',
-    label: 'Password',
-    helpText: 'Enter characters more than 8',
+    size: 'large',
+    label: '',
+    placeholder: 'TextArea',
     disabled: false,
+  },
+  argTypes: {
+    size: {
+      control: 'radio',
+      options: ['large'],
+    },
+    label: {
+      control: 'object',
+    },
   },
 };
