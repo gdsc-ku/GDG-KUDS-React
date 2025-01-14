@@ -2,10 +2,10 @@
 //없으면 css= 오류 - tsconfig? 수정해야함
 
 import { css } from '@emotion/react';
-import { generateClasses } from '../../utils/classNames';
-import { GLOBAL_PREFIX } from '../../constants/prefix';
+import { clsx } from '../../utils/classNames';
 import { forwardRef } from 'react';
 import { Colors } from '../../constants/colors';
+import { PREFIX_CLS } from '../ConfigProvider/context';
 
 type Size = 'large';
 
@@ -15,19 +15,21 @@ export interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextArea
   placeholder?: string;
 }
 
-const TEXTAREA_PREFIX = `${GLOBAL_PREFIX}-textarea`;
-const generateTextAreaCls = generateClasses(TEXTAREA_PREFIX);
+const prefixCls = `${PREFIX_CLS}-textarea`;
 
 const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>((props, ref) => {
   const { size = 'large', label, className, ...textAreaProps } = props;
+  const { disabled } = textAreaProps;
+
+  const containerCls = clsx(`${prefixCls}-container`, className);
+  const textareaCls = clsx(`${prefixCls}-inner`, `${prefixCls}-${size}`, {
+    [`${prefixCls}-disabled`]: disabled,
+  });
 
   return (
-    <div css={TextAreaContainerStyles} className={generateTextAreaCls(['container', className])}>
-      {label && <label className={generateTextAreaCls(['label'])}>{label}</label>}
-      <textarea
-        ref={ref}
-        className={generateTextAreaCls([size, 'inner', { disabled: textAreaProps.disabled }])}
-        {...textAreaProps}></textarea>
+    <div css={TextAreaContainerStyles} className={containerCls}>
+      {label && <label className={`${prefixCls}-label`}>{label}</label>}
+      <textarea ref={ref} className={textareaCls} {...textAreaProps}></textarea>
     </div>
   );
 });
@@ -60,12 +62,12 @@ const TextAreaDefaultStyles = css({
     borderColor: Colors.primary[800],
   }, //textarea focus
 
-  [`&.${TEXTAREA_PREFIX}-large`]: {
+  [`&.${prefixCls}-large`]: {
     width: 660,
     height: 280,
   },
 
-  [`&.${TEXTAREA_PREFIX}-disabled`]: {
+  [`&.${prefixCls}-disabled`]: {
     backgroundColor: Colors.primary[200],
     borderColor: Colors.primary[300],
 
@@ -79,6 +81,6 @@ const TextAreaContainerStyles = css({
   gap: 16,
   width: '100%',
 
-  [`> label.${TEXTAREA_PREFIX}-label`]: LabelStyles,
-  [`> textarea.${TEXTAREA_PREFIX}-inner`]: TextAreaDefaultStyles,
+  [`> label.${prefixCls}-label`]: LabelStyles,
+  [`> textarea.${prefixCls}-inner`]: TextAreaDefaultStyles,
 });

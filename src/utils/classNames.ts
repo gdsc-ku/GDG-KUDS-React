@@ -22,22 +22,6 @@ const parseCls = (cls: AvailableClass, prefix?: string): string | undefined => {
       .join(' ');
 };
 
-export const generateClasses =
-  (prefix?: string) =>
-  (suffixes: AvailableClass[], ...cls: (string | undefined)[]) => {
-    const mergedClasses = suffixes
-      .map((suffix) => parseCls(suffix, prefix))
-      .filter((cls) => !!cls)
-      .join(' ');
-
-    if (cls.length > 0) {
-      const classes = cls.filter((cls) => !!cls).join(' ');
-      return `${mergedClasses} ${classes}`;
-    }
-
-    return mergedClasses;
-  };
-
 export const clsx = (...values: AvailableClass[]): string => {
   return values
     .map((value) => parseCls(value))
