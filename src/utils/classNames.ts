@@ -1,21 +1,3 @@
-/**
- * @deprecated
- */
-export const classNames = (...values: unknown[]): string => {
-  return values
-    .filter((value) => !!value) // falsey 제거
-    .map((value) => {
-      if (typeof value === 'string') return value;
-      if (typeof value === 'number') return value.toString();
-      if (Array.isArray(value)) return classNames(value);
-
-      // TODO: object가 들어오면?
-
-      return '';
-    })
-    .join(' ');
-};
-
 type AvailableClass =
   | string
   | number
@@ -40,18 +22,9 @@ const parseCls = (cls: AvailableClass, prefix?: string): string | undefined => {
       .join(' ');
 };
 
-export const generateClasses =
-  (prefix?: string) =>
-  (suffixes: AvailableClass[], ...cls: (string | undefined)[]) => {
-    const mergedClasses = suffixes
-      .map((suffix) => parseCls(suffix, prefix))
-      .filter((cls) => !!cls)
-      .join(' ');
-
-    if (cls.length > 0) {
-      const classes = cls.filter((cls) => !!cls).join(' ');
-      return `${mergedClasses} ${classes}`;
-    }
-
-    return mergedClasses;
-  };
+export const clsx = (...values: AvailableClass[]): string => {
+  return values
+    .map((value) => parseCls(value))
+    .filter((cls) => !!cls)
+    .join(' ');
+};

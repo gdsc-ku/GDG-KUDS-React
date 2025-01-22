@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
 
 import { css } from '@emotion/react';
-import { generateClasses } from '../../utils/classNames';
-import { GLOBAL_PREFIX } from '../../constants/prefix';
+import { clsx } from '../../utils/classNames';
 import { forwardRef } from 'react';
-import { Colors } from '../../constants/colors';
+import { PREFIX_CLS } from '../ConfigProvider/context';
+import { IcLoader } from '../../icons';
 
 type ColorType = 'primary' | 'blue' | 'green' | 'yellow' | 'red';
 type Size = 'md' | 'lg';
@@ -16,167 +16,130 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   icon?: React.ReactNode;
 }
 
-const BUTTON_PREFIX = `${GLOBAL_PREFIX}-btn`;
+const prefixCls = `${PREFIX_CLS}-btn`;
 
-/**
- * TODO: 로딩 아이콘 추가
- */
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   const { colorType, size, loading, icon, className, children, ...buttonProps } = props;
-  const generateButtonCls = generateClasses(BUTTON_PREFIX);
+  const { disabled } = buttonProps;
 
-  const buttonCls = generateButtonCls(
-    [
-      colorType,
-      size,
-      {
-        'icon-only': !!icon && !children,
-      },
-    ],
+  const buttonCls = clsx(
+    prefixCls,
+    {
+      [`${prefixCls}-${colorType}`]: !!colorType,
+      [`${prefixCls}-${size}`]: !!size,
+      [`${prefixCls}-disabled`]: disabled,
+      [`${prefixCls}-icon-only`]: !!icon && !children,
+    },
     className,
   );
 
   return (
-    <button
-      ref={ref}
-      className={`${BUTTON_PREFIX} ${buttonCls}`}
-      css={ButtonStyle}
-      onClick={(e) => {
-        // loading 동안 클릭 이벤트 발생 안하도록
-        if (loading) {
-          e.preventDefault();
-          return;
-        }
-
-        buttonProps.onClick?.(e);
-      }}
-      {...buttonProps}>
-      {loading && <span className={generateButtonCls(['icon', 'loading-icon'])}>loading</span>}
-      {!loading && icon && <span className={generateButtonCls(['icon'])}>{icon}</span>}
-      {!loading && children && <span className={generateButtonCls(['inner'])}>{children}</span>}
+    <button ref={ref} className={buttonCls} css={ButtonStyle} {...buttonProps}>
+      {loading && (
+        <span className={clsx(`${prefixCls}-icon`, `${prefixCls}-icon-loading`)}>
+          <IcLoader />
+        </span>
+      )}
+      {!loading && icon && <span className={`${prefixCls}-icon`}>{icon}</span>}
+      {!loading && children && <span className={`${prefixCls}-inner`}>{children}</span>}
     </button>
   );
 });
 
 export default Button;
 
-const DefaultStyle = css({
-  padding: '14px 20px',
+const ButtonStyle = css(
+  {
+    padding: '14px 20px',
 
-  display: 'inline-flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: 8,
+    display: 'inline-flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
 
-  height: 48,
+    height: 48,
 
-  backgroundColor: Colors.primary[800],
-  color: Colors.primary[100],
+    border: 'none',
+    borderRadius: 300,
 
-  border: 'none',
-  borderRadius: 300,
+    backgroundColor: 'var(--primary-800)',
+    color: 'var(--primary-100)',
 
-  transitionProperty: 'background-color, color',
-  transitionDuration: '150ms',
-  transitionTimingFunction: 'ease-in-out',
+    cursor: 'pointer',
 
-  cursor: 'pointer',
+    transitionProperty: 'background-color, color',
+    transitionDuration: '150ms',
+    transitionTimingFunction: 'ease-in-out',
 
-  '&:hover': {
-    backgroundColor: Colors.primary[200],
-    color: Colors.primary[800],
-  },
-  '&:active': {
-    backgroundColor: Colors.primary[300],
-    color: Colors.primary[800],
-  },
-
-  '&:disabled': {
-    backgroundColor: Colors.primary[400],
-    color: Colors.primary[100],
-
-    cursor: 'not-allowed',
     '&:hover': {
-      backgroundColor: Colors.primary[400],
-      color: Colors.primary[100],
+      backgroundColor: 'var(--primary-200)',
+      color: 'var(--primary-800)',
     },
     '&:active': {
-      backgroundColor: Colors.primary[400],
-      color: Colors.primary[100],
+      backgroundColor: 'var(--primary-300)',
+      color: 'var(--primary-800)',
     },
-  },
-});
+    '&:disabled': {
+      backgroundColor: 'var(--primary-400) !important',
+      color: 'var(--primary-100) !important',
 
-const ColorTypeStyle = css({
-  [`&.${BUTTON_PREFIX}-blue`]: {
-    backgroundColor: Colors.blue[500],
-    color: Colors.primary[100],
-    '&:hover': {
-      backgroundColor: Colors.blue[100],
+      cursor: 'not-allowed',
     },
-    '&:active': {
-      backgroundColor: Colors.blue[300],
-    },
-  },
-  [`&.${BUTTON_PREFIX}-green`]: {
-    backgroundColor: Colors.green[500],
-    color: Colors.primary[100],
-    '&:hover': {
-      backgroundColor: Colors.green[100],
-    },
-    '&:active': {
-      backgroundColor: Colors.green[300],
-    },
-  },
-  [`&.${BUTTON_PREFIX}-yellow`]: {
-    backgroundColor: Colors.yellow[500],
-    color: Colors.primary[100],
-    '&:hover': {
-      backgroundColor: Colors.yellow[100],
-    },
-    '&:active': {
-      backgroundColor: Colors.yellow[300],
-    },
-  },
-  [`&.${BUTTON_PREFIX}-red`]: {
-    backgroundColor: Colors.red[500],
-    color: Colors.primary[100],
-    '&:hover': {
-      backgroundColor: Colors.red[100],
-    },
-    '&:active': {
-      backgroundColor: Colors.red[300],
-    },
-  },
-});
 
-const SizeStyle = css({
-  [`&.${BUTTON_PREFIX}:not(.${BUTTON_PREFIX}-icon-only)`]: {
-    minWidth: 120,
+    [`&.${prefixCls}:not(.${prefixCls}-icon-only)`]: {
+      minWidth: 120,
 
-    [`&.${BUTTON_PREFIX}-lg`]: {
-      width: '100%',
+      [`&.${prefixCls}-lg`]: {
+        width: '100%',
+      },
     },
-  },
 
-  [`&.${BUTTON_PREFIX}-icon-only`]: {
-    padding: 12,
-    width: 48,
+    [`&.${prefixCls}-icon-only`]: {
+      padding: 12,
+      width: 48,
 
-    span: {
+      [`&.${prefixCls}-lg`]: {
+        padding: '12px 28px',
+        width: 80,
+      },
+    },
+
+    [`> .${prefixCls}-icon`]: {
       display: 'inline-flex',
       justifyContent: 'center',
       alignItems: 'center',
 
-      width: 24,
-      height: 24,
-    },
+      [`&.${prefixCls}-icon-loading > svg`]: {
+        animation: 'spin 1.5s linear infinite',
 
-    [`&.${BUTTON_PREFIX}-lg`]: {
-      padding: '12px 28px',
-      width: 80,
+        '@keyframes spin': {
+          from: {
+            transform: 'rotate(0deg)',
+          },
+          to: {
+            transform: 'rotate(360deg)',
+          },
+        },
+
+        ['path']: {
+          stroke: 'var(--primary-100)',
+        },
+      },
     },
   },
-});
+  ['blue', 'green', 'yellow', 'red'].map((colorType) =>
+    css({
+      [`&.${prefixCls}-${colorType}`]: {
+        backgroundColor: `var(--${colorType}-500)`,
+        color: `var(--primary-100)`,
 
-const ButtonStyle = css(DefaultStyle, ColorTypeStyle, SizeStyle);
+        '&:hover': {
+          backgroundColor: `var(--${colorType}-100)`,
+        },
+        '&:active': {
+          backgroundColor: `var(--${colorType}-300)`,
+        },
+      },
+    }),
+  ),
+);

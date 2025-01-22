@@ -20,7 +20,7 @@ export const Basic: Story = {
     type: 'text',
     size: 'small',
     status: 'default',
-    label: '',
+    label: 'label',
     helpText: '',
     disabled: false,
   },
@@ -41,12 +41,8 @@ export const Basic: Story = {
       control: 'radio',
       options: ['default', 'success', 'error'],
     },
-    label: {
-      control: 'object',
-    },
-    helpText: {
-      control: 'object',
-    },
+    label: { control: 'text' },
+    helpText: { control: 'text' },
   },
 };
 
@@ -65,8 +61,6 @@ export const Textarea: StoryObj<Meta<typeof TextArea>> = {
       control: 'radio',
       options: ['large'],
     },
-    label: {
-      control: 'object',
-    },
+    label: { control: 'text' },
   },
 };
