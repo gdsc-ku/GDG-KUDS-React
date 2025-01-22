@@ -113,6 +113,8 @@ const SelectBoxStyles = css({
   left: 0,
 
   width: '100%', // 버튼의 너비와 동일하게 설정
+  display: 'block',
+
   backgroundColor: Colors.primary[100],
   borderRadius: 8,
   boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
@@ -128,14 +130,14 @@ const SelectBoxStyles = css({
 const SelectItemsStyles = (isSelected: boolean) =>
   css({
     padding: '8px 16px', // 선택 항목의 패딩
-    width: 'inherit',
+    width: '100%',
+    boxSizing: 'border-box',
     fontSize: 14,
     color: isSelected ? Colors.primary[800] : Colors.primary[600],
     backgroundColor: isSelected ? Colors.primary[200] : 'transparent',
     cursor: 'pointer',
     transition: 'background-color 0.2s ease, color 0.2s ease',
     listStyle: 'none',
-    listStylePosition: 'inherit',
 
     '&:hover': {
       backgroundColor: Colors.primary[300],
