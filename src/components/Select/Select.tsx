@@ -11,6 +11,7 @@ type ColorType = 'primary' | 'blue' | 'green' | 'yellow' | 'red';
 
 export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   colorType?: ColorType;
+  width: number;
   options: { value: string; label: string }[];
   placeholder?: string;
   onChange: React.ChangeEventHandler<HTMLSelectElement>;
@@ -19,14 +20,14 @@ export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElemen
 const prefixCls = `${PREFIX_CLS}-select`;
 
 const Select = forwardRef<HTMLButtonElement, SelectProps>((props, ref) => {
-  const { colorType, className, ...selectProps } = props;
-  const { disabled, options, value, placeholder, onChange } = selectProps;
+  const { colorType = '', className, width = 280, ...selectProps } = props;
+  const { options, value, placeholder, onChange = () => {} } = selectProps;
 
   const selectCls = clsx(
     prefixCls,
     {
       [`${prefixCls}-${colorType}`]: !!colorType,
-      [`${prefixCls}-disabled`]: disabled,
+      [`${prefixCls}-${width}`]: !!width,
     },
     className,
   );
@@ -36,18 +37,20 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>((props, ref) => {
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
+
   const handleSelect = (value: string) => {
     setSelectedValue(value);
     onChange({ target: { value } } as React.ChangeEvent<HTMLSelectElement>);
     setIsOpen(false);
   };
 
+  const selectedOption = options.find((o) => o.value === selectedValue);
+  const isSelected = !!selectedValue;
+
   return (
-    <div css={SelectContainerStyles} className={selectCls}>
+    <div css={SelectContainerStyles(width, isSelected)} className={selectCls}>
       <button ref={ref} onClick={handleToggle} className={clsx(`${prefixCls}-button`)}>
-        <span className={clsx(`${prefixCls}-placeholder`)}>
-          {selectedValue ? options.find((o) => o.value === selectedValue)?.label : placeholder}
-        </span>
+        <span className={clsx(`${prefixCls}-placeholder`)}>{selectedOption ? selectedOption.label : placeholder}</span>
         <IconArrow className={clsx(`${prefixCls}-icon`)} />
       </button>
       {isOpen && (
@@ -69,86 +72,90 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>((props, ref) => {
 
 export default Select;
 
-const SelectStyles = css({
-  color: Colors.primary[500],
+const SelectStyles = (isSelected: boolean) =>
+  css({
+    color: Colors.primary[500],
 
-  padding: '8px, 16px',
-  minWidth: 280,
-  height: 40,
+    padding: '11px 16px',
+    width: '100%',
+    height: 40,
 
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: 178,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
 
-  border: '1px solid',
-  borderRadius: 8,
+    border: '1px solid',
+    borderRadius: 8,
 
-  borderColor: Colors.primary[500],
-  backgroundColor: Colors.primary[100],
+    borderColor: isSelected ? Colors.primary[800] : Colors.primary[500],
+    backgroundColor: Colors.primary[100],
 
-  [`> .${prefixCls}-placeholder`]: {
-    fontSize: 16,
-    fontWeight: 500,
-  },
+    [`> .${prefixCls}-placeholder`]: {
+      fontSize: 16,
+      fontWeight: 500,
+      color: isSelected ? Colors.primary[800] : Colors.primary[500],
+    },
 
-  [`> .${prefixCls}-icon`]: {
-    width: 16,
-    height: 16,
+    [`> .${prefixCls}-icon`]: {
+      width: 16,
+      height: 16,
+
+      '&:hover': {
+        color: Colors.primary[600],
+      },
+    },
 
     '&:hover': {
+      borderColor: Colors.primary[800],
       color: Colors.primary[600],
     },
-  },
-
-  '&:hover': {
-    borderColor: Colors.primary[800],
-    color: Colors.primary[600],
-  },
-});
+  });
 
 const SelectBoxStyles = css({
   position: 'absolute', // 버튼 아래에 위치
   top: '100%', // 버튼 바로 아래에 배치
   left: 0,
 
-  width: '100%', // 버튼의 너비와 동일하게 설정
-  display: 'block',
+  width: '100%',
 
   backgroundColor: Colors.primary[100],
   borderRadius: 8,
   boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-  border: `1px solid ${Colors.primary[500]}`,
 
   zIndex: 10,
-  maxHeight: 200,
+  minHeight: 80,
+  maxHeight: 300,
   overflowY: 'auto',
-  padding: 0, // 불필요한 패딩 제거
-  margin: 0, // 기본 마진 제거
+  padding: 0,
+  margin: 0,
 });
 
 const SelectItemsStyles = (isSelected: boolean) =>
   css({
-    padding: '8px 16px', // 선택 항목의 패딩
+    padding: '11px 16px',
     width: '100%',
     boxSizing: 'border-box',
-    fontSize: 14,
+
+    fontSize: 16,
     color: isSelected ? Colors.primary[800] : Colors.primary[600],
     backgroundColor: isSelected ? Colors.primary[200] : 'transparent',
+
     cursor: 'pointer',
     transition: 'background-color 0.2s ease, color 0.2s ease',
     listStyle: 'none',
 
     '&:hover': {
-      backgroundColor: Colors.primary[300],
+      backgroundColor: Colors.primary[200],
       color: Colors.primary[800],
     },
   });
 
-const SelectContainerStyles = css({
-  position: 'relative',
-  minWidth: 280,
-
-  [`> button.${prefixCls}-button`]: SelectStyles,
-  [`> ul.${prefixCls}-selectbox`]: SelectBoxStyles,
-});
+const SelectContainerStyles = (width: number, isSelected: boolean) => {
+  return css({
+    position: 'relative',
+    width: `${width}px`,
+    minWidth: 280,
+    [`> button.${prefixCls}-button`]: SelectStyles(isSelected),
+    [`> ul.${prefixCls}-selectbox`]: SelectBoxStyles,
+  });
+};

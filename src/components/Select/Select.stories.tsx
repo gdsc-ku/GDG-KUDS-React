@@ -9,12 +9,13 @@ const meta: Meta<typeof Select> = {
   args: {
     name: 'dropdown',
     colorType: 'primary',
-    disabled: false,
     placeholder: 'Select',
     options: [
-      { value: 'apple', label: 'Apple' },
-      { value: 'orange', label: 'Orange' },
-      { value: 'banana', label: 'Banana' },
+      { value: 'product-manager', label: 'Product Manager' },
+      { value: 'backend-designer', label: 'Backend Designer' },
+      { value: 'frontend-designer', label: 'Frontend Designer' },
+      { value: 'ui-designer', label: 'UI Designer' },
+      { value: 'ux-designer', label: 'UX Designer' },
     ],
   },
   argTypes: {
@@ -22,10 +23,6 @@ const meta: Meta<typeof Select> = {
       control: 'radio',
       options: ['primary', 'blue', 'green', 'yellow', 'red'],
       description: 'Defines the color type of the select component.',
-    },
-    disabled: {
-      control: 'boolean',
-      description: 'Disables the select dropdown.',
     },
     options: {
       control: 'object',
