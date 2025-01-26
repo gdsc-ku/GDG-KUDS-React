@@ -1,12 +1,25 @@
 {
-  "name": "design-system",
-  "version": "0.0.1",
+  "name": "@gdg-ku/ds",
+  "version": "0.1.0",
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "files": [
     "dist"
+  ],
+  "author": "GDGoC KU",
+  "description": "Design System for GDGoC KU",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GDG-KU/GDG-KUDS-React.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GDG-KU/GDG-KUDS-React/issues"
+  },
+  "keywords": [
+    "react",
+    "design-system"
   ],
   "license": "MIT",
   "scripts": {
@@ -20,8 +33,8 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "format:fix": "prettier --write .",
     "test": "jest",
-    "publish:check": "yarn publish --dry-run",
-    "publish": "yarn build && yarn publish",
+    "deploy:check": "yarn publish --dry-run --access public",
+    "deploy": "yarn build && yarn publish --access public",
     "prepare": "husky"
   },
   "dependencies": {
