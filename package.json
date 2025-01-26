@@ -1,5 +1,5 @@
 {
-  "name": "@gdg-ku/ds",
+  "name": "gdg-kuds",
   "version": "0.1.0",
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",
