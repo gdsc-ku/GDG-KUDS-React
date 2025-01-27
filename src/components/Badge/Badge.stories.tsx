@@ -1,18 +1,22 @@
 import { Meta, StoryObj } from '@storybook/react';
-import Checkbox from './Checkbox';
-import { useState } from 'react';
+import Badge from './Badge';
 import { ConfigProvider } from '../ConfigProvider';
+import { useState } from 'react';
 
-const meta: Meta<typeof Checkbox> = {
-  title: 'Checkbox',
-  component: Checkbox,
-  tags: ['autodocs'],
-  args: {},
+const meta: Meta<typeof Badge> = {
+  title: 'Badge',
+  args: { children: 'This is a label' },
   argTypes: {
-    name: { control: false },
+    size: {
+      control: 'radio',
+      options: ['sm', 'md'],
+    },
+    colorType: {
+      control: 'radio',
+      options: ['primary', 'white', 'blue', 'green', 'yellow', 'red'],
+    },
   },
   render: function Render(args) {
-    const [checked, setChecked] = useState(false);
     const [mode, setMode] = useState<'light' | 'dark'>('light');
 
     return (
@@ -27,11 +31,9 @@ const meta: Meta<typeof Checkbox> = {
               border: 'none',
               borderRadius: 4,
             }}>
-            Toggle Mode
+            Toggle to {mode === 'light' ? 'dark' : 'light'} Mode
           </button>
-          <Checkbox {...args} checked={checked} onChange={(e) => setChecked(e.target.checked)}>
-            This is Helper Text
-          </Checkbox>
+          <Badge {...args} />
         </div>
       </ConfigProvider>
     );
@@ -39,14 +41,6 @@ const meta: Meta<typeof Checkbox> = {
 };
 
 export default meta;
-
 type Story = StoryObj<typeof meta>;
 
-export const checkbox: Story = {
-  args: {
-    name: 'checkbox',
-    colorType: 'yellow',
-    disabled: false,
-    children: '',
-  },
-};
+export const badge: Story = {};

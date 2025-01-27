@@ -9,7 +9,7 @@ export default defineConfig({
     emptyOutDir: false,
     lib: {
       entry: 'src/index.ts',
-      name: 'Design-System',
+      name: 'gdg-kuds',
       formats: ['es', 'cjs'],
       fileName: (format) => `index.${format}.js`,
     },

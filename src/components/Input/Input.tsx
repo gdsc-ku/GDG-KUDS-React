@@ -2,10 +2,10 @@
 //없으면 css= 오류 - tsconfig? 수정해야함
 
 import { css } from '@emotion/react';
-import { generateClasses } from '../../utils/classNames';
-import { GLOBAL_PREFIX } from '../../constants/prefix';
+import { clsx } from '../../utils/classNames';
 import { forwardRef } from 'react';
 import { Colors } from '../../constants/colors';
+import { PREFIX_CLS } from '../ConfigProvider/context';
 
 type ColorType = 'primary'; //colorType 별도 명시
 type Size = 'small' | 'medium';
@@ -21,8 +21,8 @@ export interface InputProps extends Omit<InputAttribute, 'size'> {
   status?: Status;
   icon?: React.ReactNode;
 }
-const INPUT_PREFIX = `${GLOBAL_PREFIX}-input`;
-const generateInputCls = generateClasses(INPUT_PREFIX);
+
+const prefixCls = `${PREFIX_CLS}-checkbox`;
 
 const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const {
@@ -37,21 +37,21 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     ...inputProps
   } = props;
 
+  const containerCls = clsx(`${prefixCls}-container`, `${prefixCls}-${status}`, className);
+
+  const inputCls = clsx(`${prefixCls}-inner`, `${prefixCls}-${colorType}`, `${prefixCls}-${size}`, {
+    [`${prefixCls}-disabled`]: inputProps.disabled,
+  });
+
   return (
-    <div css={InputContainerStyles} className={generateInputCls(['container', status, className])}>
-      {label && <label className={generateInputCls(['label'])}>{label}</label>}
-      <div className={generateInputCls(['wrapper'])}>
-        <input
-          ref={ref}
-          type={type}
-          className={generateInputCls([colorType, 'inner', { disabled: inputProps.disabled }, size])}
-          {...inputProps}
-        />
-        {icon && <span className={generateInputCls(['icon'])}>{icon}</span>}
+    <div css={InputContainerStyles} className={containerCls}>
+      {label && <label className={`${prefixCls}-label`}>{label}</label>}
+      <div className={`${prefixCls}-wrapper`}>
+        <input ref={ref} type={type} className={inputCls} {...inputProps} />
+        {icon && <span className={`${prefixCls}-icon`}>{icon}</span>}
         {/* success icon, error icon 추가 */}
       </div>
-
-      {helpText && <p className={generateInputCls(['helptext'])}>{helpText}</p>}
+      {helpText && <p className={`${prefixCls}-helptext`}>{helpText}</p>}
     </div>
   );
 });
@@ -84,16 +84,16 @@ const InputDefaultStyles = css({
 
   cursor: 'text',
 
-  [`&.${INPUT_PREFIX}-small`]: {
+  [`&.${prefixCls}-small`]: {
     width: 200,
     height: 14,
   },
-  [`&.${INPUT_PREFIX}-medium`]: {
+  [`&.${prefixCls}-medium`]: {
     width: 260,
     height: 24,
   },
 
-  [`&.${INPUT_PREFIX}-disabled`]: {
+  [`&.${prefixCls}-disabled`]: {
     backgroundColor: Colors.primary[200],
     borderColor: Colors.primary[300],
 
@@ -104,11 +104,11 @@ const InputDefaultStyles = css({
 const WrapperStyles = css({
   position: 'relative',
 
-  [`> input.${INPUT_PREFIX}-inner`]: InputDefaultStyles,
+  [`> input.${prefixCls}-inner`]: InputDefaultStyles,
 
   //icon scss로 수정 아이콘에 className을 만들어서 바로 적용
   //추후 icon 전체 업데이트
-  [`> span.${INPUT_PREFIX}-icon`]: {
+  [`> span.${prefixCls}-icon`]: {
     position: 'absolute',
     right: 10,
     top: '50%',
@@ -126,13 +126,13 @@ const InputContainerStyles = css({
   gap: 2,
   width: '100%',
 
-  [`> label.${INPUT_PREFIX}-label`]: LabelStyles,
-  [`> div.${INPUT_PREFIX}-wrapper`]: WrapperStyles,
-  [`> p.${INPUT_PREFIX}-helptext`]: HelpTextSyles,
+  [`> label.${prefixCls}-label`]: LabelStyles,
+  [`> div.${prefixCls}-wrapper`]: WrapperStyles,
+  [`> p.${prefixCls}-helptext`]: HelpTextSyles,
 
-  [`&.${INPUT_PREFIX}-default`]: {
+  [`&.${prefixCls}-default`]: {
     color: Colors.primary[700],
-    [`> div.${INPUT_PREFIX}-wrapper > input.${INPUT_PREFIX}-inner`]: {
+    [`> div.${prefixCls}-wrapper > input.${prefixCls}-inner`]: {
       borderColor: Colors.primary[500],
       //focus를 이렇게 넣는 것이 맞는지 모르겠음
       '&:focus': {
@@ -143,9 +143,9 @@ const InputContainerStyles = css({
     },
   },
 
-  [`&.${INPUT_PREFIX}-success`]: {
+  [`&.${prefixCls}-success`]: {
     color: Colors.green[500],
-    [`> div.${INPUT_PREFIX}-wrapper > input.${INPUT_PREFIX}-inner`]: {
+    [`> div.${prefixCls}-wrapper > input.${prefixCls}-inner`]: {
       borderColor: Colors.green[500],
       '&:focus': {
         transition: 'border-color 0.2s, color 0.2s',
@@ -155,9 +155,9 @@ const InputContainerStyles = css({
     },
   },
 
-  [`&.${INPUT_PREFIX}-error`]: {
+  [`&.${prefixCls}-error`]: {
     color: Colors.red[500],
-    [`> div.${INPUT_PREFIX}-wrapper > input.${INPUT_PREFIX}-inner`]: {
+    [`> div.${prefixCls}-wrapper > input.${prefixCls}-inner`]: {
       borderColor: Colors.red[500],
       '&:focus': {
         transition: 'border-color 0.2s, color 0.2s',
